@@ -1,4 +1,4 @@
-# extending-what3words-api
+# extending-what3words-api [![Build Status](https://travis-ci.org/tsamaya/extending-what3words-api.svg?branch=master)](https://travis-ci.org/tsamaya/extending-what3words-api)
 
 This repo is a sample how to extend [what3words API](https://docs.what3words.com/api/v2).
 
@@ -35,8 +35,8 @@ It runs by default `$ node server.js`
 
 Based on https://docs.what3words.com/api/v2/#reverse, this API method returns 3 word address in various supported language by what3words using `geojson` format.
 
-| Parameter | Type   | Desription                                               |
-|-----------|-------------------------------------------------------------------|
+| Parameter | Type   | Description                                              |
+| :--- | :---:  | :--- |
 | coords    | String | Coordinates as a comma separated string of latitude and longitude |
 | key       | String | A valid API key; if not supplied as a parameter, a key must be supplied as an environnement varaible W3W_API_KEY |
 | langs     | Arrays | A list of supported 3 word address language as an [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) 2 letter code.|
