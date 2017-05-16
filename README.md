@@ -83,7 +83,8 @@ Based on https://docs.what3words.com/api/v2/#reverse, this API method returns 3 
 ```
 
 # Logs
-application logs and access log are store in logs folder
+logging uses winston
+application logs and access log are store in logs folder.
 
 ## Application
 `api.log` is the application log file

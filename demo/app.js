@@ -20,21 +20,27 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={
 }).addTo(map);
 
 var onMapClick = function (e) {
+  createPopup(e.latlng);
+};
+
+var createPopup = function (latlng) {
   var data = {
     key: w3w_api_key,
     langs: 'fr,it,en,de,es',
-    coords: e.latlng.lat + ',' + e.latlng.lng
+    coords: latlng.lat + ',' + latlng.lng
   };
   $.get('http://localhost:3000/api/reverse-ext', data, function (response) {
+    console.log(response);
     if (response.error) {
-      console.log(response);
+      // TODO
     } else {
-      console.log(response);
-      L.popup({
+      var popup = L.popup({
         maxWidth: 300,
         minWidth: 200
-      }).setLatLng(e.latlng)
-        .setContent('<img src="img/flag-united-kingdom-16x16.png" alt="en">&nbsp;' +
+      });
+
+      popup.setLatLng(latlng);
+      popup.setContent('<img src="img/flag-united-kingdom-16x16.png" alt="en">&nbsp;' +
           response.properties.words_en + '<br>' +
           '<img src="img/flag-france-16x16.png" alt="en">&nbsp;' +
           response.properties.words_fr + '<br>' +
@@ -50,3 +56,92 @@ var onMapClick = function (e) {
 };
 
 map.on('click', onMapClick);
+
+$(function () {
+  $('#search').typeahead({
+    dynamic: true,
+    delay: 100,
+    maxItem: 10,
+    hint: true,
+    source: {
+      autocomplete: {
+        display: ['words'],
+        filter: false, // keep all results
+        ajax: function (query) {
+          var addr = query;
+          if (addr.indexOf('///') === 0) {
+            addr = addr.replace(/\/\/\//, '');
+          }
+          var data = {
+            key: w3w_api_key,
+            addr: addr,
+            lang: 'en',
+            count: 6
+          };
+          return {
+            type: 'GET',
+            url: 'http://localhost:3000/api/autocomplete',
+            data: data,
+            path: 'suggestions'
+          };
+        },
+        template: function (query, item) {
+          if (item.country) {
+            return [
+              '<div class="typeahead__list-inner">',
+              '<span class="typeahead__twa">{{words}}</span>', '<br>',
+              '<span class="typeahead__info">', '{{place}}', '</span>',
+              '</div>'
+            ].join('\n');
+          } else {
+            return item.words;
+          }
+        }
+      }
+    },
+    callback: {
+      onClickAfter: function (node, a, item, event) {
+        console.log(item);
+        var n = item.words.split('.').length - 1;
+        if (n === 2) {
+          map.flyTo(item.geometry);
+          createPopup(item.geometry);
+        } else {
+          $('#search').val(item.words + '.');
+        }
+      }
+    },
+    debug: true
+  });
+
+  // var timerid;
+  // $('#search').on('input', function (e) {
+  //   var value = $(this).val();
+  //   $('#suggestions').html('');
+  //   if (value && !/^\s*$/.test(value) && $(this).data('lastval') !== value) {
+  //     $(this).data('lastval', value);
+  //     clearTimeout(timerid);
+  //     timerid = setTimeout(function () {
+  //       var str = value.trim();
+  //       // change action
+  //       var data = {
+  //         key: w3w_api_key,
+  //         lang: 'en',
+  //         addr: str
+  //       };
+  //       $.get('http://localhost:3000/api/autocomplete', data, function (response) {
+  //         console.log(response);
+  //         if (response.status && response.status.code) {
+  //         } else {
+  //           var arr = response.suggestions;
+  //           var display = '';
+  //           for (var i = 0; i < arr.length; i++) {
+  //             display += arr[i].words + '<br>';
+  //           }
+  //           $('#suggestions').html(display);
+  //         }
+  //       });
+  //     }, 100);
+  //   };
+  // });
+});
