@@ -2,7 +2,8 @@
 
 This repo is a sample how to extend [what3words API](https://docs.what3words.com/api/v2).
 
-In my opinion, on a web application, using asynchronous request directly towards what3words API is a better solution. At least, this repos shows the bare code to achieve it.
+In my opinion, on a web application, using asynchronous requests directly towards what3words API are a better solution for the user experience.
+At least, this repos shows the bare code to achieve a reverse geocoding in multiple language.
 
 # Build
 
@@ -10,18 +11,19 @@ In my opinion, on a web application, using asynchronous request directly towards
 - node
 - gulp
 
-## Setup environnement
+## Setup environment
 clone the repository
 `$ cd extending-what3words-api`
 `$ npm install`
 
 ## Test
+`$ export W3W_API_KEY=YOUR-API-KEY`
 `$ gulp test`
 
 ## W3W_API_KEY
 Two options, what3words API key :
 - is send as a query parameter at each request
-- is set as an environment variable
+- is set as an environment variable (needed for tests)
 `$ export W3W_API_KEY=YOUR-API-KEY`
 
 ## Run
@@ -35,10 +37,10 @@ It runs by default `$ node server.js`
 
 Based on https://docs.what3words.com/api/v2/#reverse, this API method returns 3 word address in various supported language by what3words using `geojson` format.
 
-| Parameter | Type   | Description                                              |
+| Parameter | Type   | Description |
 | :--- | :---:  | :--- |
 | coords    | String | Coordinates as a comma separated string of latitude and longitude |
-| key       | String | A valid API key; if not supplied as a parameter, a key must be supplied as an environnement varaible W3W_API_KEY |
+| key       | String | A valid API key; if not supplied as a parameter, a key must be supplied as an environment varaible W3W_API_KEY |
 | langs     | Arrays | A list of supported 3 word address language as an [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) 2 letter code.|
 
 ### Example request
@@ -81,9 +83,48 @@ Based on https://docs.what3words.com/api/v2/#reverse, this API method returns 3 
   }
 }
 ```
+## autocomplete
+
+Based on https://docs.what3words.com/api/v2/#autosuggest, this API method returns a list of 3 word addresses based on input parameter `addr`.
+
+| Parameter | Type   | Description |
+| :--- | :---:  | :--- |
+| addr    | String | part of word.word.word |
+| key       | String | A valid API key; if not supplied as a parameter, a key must be supplied as an environment varaible W3W_API_KEY |
+| lang     | String | A supported 3 word address language as an [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) 2 letter code.|
+
+This method returns a list of suggestions Object containing only the property `words` for the first two words of the 3 word address, then the suggestions as described in what3words API
+
+### Example request
+`$ curl "http://localhost:3000/api/autocomplete?addr=in&lang=en"`
+
+### Example response
+```javascript
+{
+  "suggestions": [
+    {
+      "words": "fine"
+    },
+    {
+      "words": "into"
+    },
+    {
+      "words": "kind"
+    },
+    {
+      "words": "line"
+    }
+  ],
+  "status": {
+    "reason": "OK",
+    "status": 200
+  },
+  "thanks": "thanks for using what3words extended API"
+}
+```
 
 # Logs
-logging uses winston
+logging uses [winston](https://github.com/winstonjs/winston).
 application logs and access log are store in logs folder.
 
 ## Application

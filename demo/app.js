@@ -14,7 +14,7 @@ var map = L.map('map').setView([51.505, -0.09], 13);
 
 L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
   attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-  maxZoom: 18,
+  maxZoom: 20,
   id: 'mapbox.streets',
   accessToken: 'pk.eyJ1IjoidHNhbWF5YSIsImEiOiJjajJpMXExM2swMDFmMzNvZnRnaGZpZm1tIn0.fgbo-yyT0cdkdNP0Mixuwg'
 }).addTo(map);
@@ -24,12 +24,14 @@ var onMapClick = function (e) {
 };
 
 var createPopup = function (latlng) {
+  map.spin(true);
   var data = {
     key: w3w_api_key,
     langs: 'fr,it,en,de,es',
     coords: latlng.lat + ',' + latlng.lng
   };
   $.get('http://localhost:3000/api/reverse-ext', data, function (response) {
+    map.spin(false);
     console.log(response);
     if (response.error) {
       // TODO
