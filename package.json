@@ -4,8 +4,7 @@
   "description": "Extending what3words API",
   "main": "index.js",
   "scripts": {
-    "test": "gulp test",
-    "server": "node server.js"
+    "test": "gulp test"
   },
   "repository": {
     "type": "git",

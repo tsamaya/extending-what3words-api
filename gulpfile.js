@@ -23,7 +23,8 @@ gulp.task('lint', function () {
  * TEST
  */
 gulp.task('mocha', function () {
-  return gulp.src(testSources, {
+  return gulp
+    .src(testSources, {
       read: false
     })
     .pipe(mocha({
