@@ -24,6 +24,7 @@
   "homepage": "https://github.com/tsamaya/extending-what3words-api#readme",
   "dependencies": {
     "express": "^4.15.2",
+    "gulp-util": "^3.0.8",
     "lodash": "^4.17.4",
     "morgan": "^1.8.1",
     "promise-throttle": "^0.3.1",
